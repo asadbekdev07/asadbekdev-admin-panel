@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  padding: 70px 0;
+}
+
+nav a {
+  padding: 5px 10px;
+  margin: 5px 0;
+}
+
+nav a.active {
+  background-color: white;
+  color: #164E63;
+}
