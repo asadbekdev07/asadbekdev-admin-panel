@@ -36,7 +36,7 @@ function Login({ setLoginSuccess }) {
     .then((res) => res.json())
     .then((data) => {
         if (data.success === true) {
-          localStorage.setItem('accessToken', data.data.tokens.accessToken.token)
+          localStorage.setItem('accessToken', data.tokens.accessToken.token)
           document.getElementById('phone').value = ''
           document.getElementById('password').value = ''
           setLoginSuccess(true)

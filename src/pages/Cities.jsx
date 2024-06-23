@@ -22,7 +22,7 @@ function Cities() {
   };
 
   const urlImage = 'https://autoapi.dezinfeksiyatashkent.uz/api/uploads/images/';
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNTczNzkzNTUtZDNjYi00NzY1LTgwMGEtNDZhOTU1NWJiOWQyIiwidG9rZW5fdHlwZSI6ImFjY2VzcyIsImlhdCI6MTcxNzI1OTkxOSwiZXhwIjoxNzQ4Nzk1OTE5fQ.NZApBzV3gHG4vel-wbdHS29Z9eAp13w6ChrwjHJCwuM';
+  const token = localStorage.getItem("accessToken");
 
   const getCity = () => {
     fetch('https://autoapi.dezinfeksiyatashkent.uz/api/cities')
