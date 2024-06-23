@@ -224,7 +224,7 @@ function Locations() {
       <div className="flex justify-between mb-[20px]">
         <h2 className="text-3xl font-bold">Locations</h2>
         <Button className="rounded-md text-white bg bg-[#1677ff]" onClick={handleModalOpen}>
-          Add a Category
+          Add a Location
         </Button>
       </div>
 
