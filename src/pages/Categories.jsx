@@ -1,4 +1,4 @@
-import { Modal, Popover, Button, Pagination, message } from 'antd';
+import { Modal, Popover, Button, Pagination, message, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 function Categories() {
@@ -7,12 +7,6 @@ function Categories() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const [id, setId] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const onPageChange = (page) => {
-    console.log('Page:', page);
-    setCurrentPage(page);
-  };
 
 
   const hidePopover = () => {
@@ -51,7 +45,9 @@ function Categories() {
       .then((res) => res.json())
       .then((res) => {
         getCategory();
-        handleModalClose()
+        handleModalClose();
+        resetFormData();
+        message.success("Added successfully")
       })
       .catch((error) => {
         console.log(error);
@@ -96,6 +92,7 @@ function Categories() {
       if(res.success){
         message.success("O'zgartirildi")
         getCategory();
+        handleEditModalClose();
       } else {
         message.error("Xatolik")
       }
@@ -126,40 +123,34 @@ function Categories() {
       });
   };
 
+  const columns = [
+    {
+      title: 'Name_en',
+      dataIndex: 'name_en',
+      key: 'name_en',
+    },
+    {
+      title: 'Name_ru',
+      dataIndex: 'name_ru',
+      key: 'name_ru',
+    },
+    {
+      title: 'Images',
+      dataIndex: 'images',
+      key: 'images',
+      render: (text, record) => (
+        <img className="w-[50px]" src={`${urlImage}${record.image_src}`} alt="Error" />
+      ),
+    },
+    {
+      title: 'Actions',
+      dataIndex: 'action',
+      key: 'action',
+      render: (text, record) => (
+        <>
+          <Button className="mr-[10px]" type="primary" onClick={() => handleEditModalOpen(record)}>Edit</Button>
 
-  return (
-    <div>
-      <div className="flex justify-between mb-[20px]">
-        <h2 className="text-3xl font-bold">Qo'shish</h2>
-        <button className="text-2xl text-white bg bg-[#1677ff] p-[7px_15px] rounded-[8px]" onClick={handleModalOpen}>
-          <span>
-            <svg viewBox="64 64 896 896" focusable="false" data-icon="plus-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-              <path d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"></path>
-              <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path>
-            </svg>
-          </span>
-        </button>
-      </div>
-
-      <table className="w-full text-left">
-        <thead>
-          <tr>
-            <th className="w-30 p-[16px_16px]">Name_En</th>
-            <th className="w-30 p-[16px_16px]">Name_Ru</th>
-            <th className="w-15 p-[16px_16px]">Images</th>
-            <th className="w-25 p-[16px_16px]">Actions</th>
-          </tr>
-        </thead>
-        {category && category.map((item, index) => (
-          <tbody key={index}>
-            <tr>
-              <td className="p-[16px_16px] border-b border-[#e5e7eb]">{item.name_en}</td>
-              <td className="p-[16px_16px] border-b border-[#e5e7eb]">{item.name_ru}</td>
-              <td className="p-[16px_16px] border-b border-[#e5e7eb]">
-                <img className="w-[50px]" src={`${urlImage}${item.image_src}`} alt="" />
-              </td>
-              <td className="p-[16px_16px] border-b border-[#e5e7eb]">
-                <Popover
+          <Popover
                   placement="left"
                   content={
                     <div>
@@ -168,39 +159,41 @@ function Categories() {
                         <Button size="small" onClick={hidePopover} className="mr-[10px]">
                           No
                         </Button>
-                        <Button type="primary" size="small" onClick={() => handleDelete(item.id)}>
+                        <Button type="primary" size="small" onClick={() => handleDelete(record.id)}>
                           Yes
                         </Button>
                       </div>
                     </div>
                   }
-                  title={item.name_en}
+                  title="Are you sure"
                   trigger="click"
-                  open={openPopover === index}
-                  onOpenChange={(newOpen) => handlePopoverOpenChange(newOpen, index)}
+                  open={openPopover === record.id}
+                  onOpenChange={(newOpen) => handlePopoverOpenChange(newOpen, record.id)}
                 >
-                  <Button className="mr-[10px] text-white bg bg-[#ff4d4f] p-[8px_18px] rounded-[8px]">
-                    <span>
-                      <svg viewBox="64 64 896 896" focusable="false" data-icon="delete" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-                        <path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path>
-                      </svg>
-                    </span>
-                  </Button>
+                  <Button type="primary" danger>Delete</Button>
                 </Popover>
-                <button className="text-white bg bg-[#1677ff] p-[8px_18px] rounded-[8px]" onClick={() => handleEditModalOpen(item)}>
-                  <span>
-                    <svg viewBox="64 64 896 896" focusable="false" data-icon="edit" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-                      <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
-                    </svg>
-                  </span>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        ))}
-      </table>
-      <div className="pt-[20px] pb-[20px] mt-[15px] flex justify-end">
-        <Pagination current={currentPage} onChange={onPageChange} total={100} pageSize={5}/>
+        </>
+      ),
+    },
+  ];
+
+  const dataSource = category.map((category) => ({
+    key: category.id,
+    ...category,
+  }));
+
+
+  return (
+    <div>
+      <div className="flex justify-between mb-[20px]">
+        <h2 className="text-3xl font-bold">Category</h2>
+        <Button className="rounded-md text-white bg bg-[#1677ff]" onClick={handleModalOpen}>
+          Add a Category
+        </Button>
+      </div>
+
+      <div>
+        <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 5 }} />
       </div>
 
 
