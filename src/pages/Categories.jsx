@@ -76,6 +76,10 @@ function Categories() {
     setData({...data, name_en: item.name_en, name_ru: item.name_ru, images: item.image_src})
   };
 
+  const resetFormData = () => {
+    setData({ name_en: '', name_ru: '', images: null });
+  };
+
   const editCategory = (e) => {
     e.preventDefault()
     const formData = new FormData()
@@ -115,6 +119,7 @@ function Categories() {
       .then(() => {
         getCategory();
         hidePopover();
+        message.success("O'chirildi")
       })
       .catch((error) => {
         console.log(error);

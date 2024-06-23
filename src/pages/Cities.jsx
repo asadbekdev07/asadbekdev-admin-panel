@@ -53,6 +53,8 @@ function Cities() {
         if (res.success) {
           getCity();
           handleModalClose();
+          resetFormData();
+          message.success("City added successfully");
         } else {
           message.error('Error adding city');
         }
