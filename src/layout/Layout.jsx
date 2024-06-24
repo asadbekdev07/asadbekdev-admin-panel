@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom"
-import menu from '../../public/menu.svg'
+import menu from '/menu.svg'
 
 function Layout({ loginSuccess, setLoginSuccess }) {
 
